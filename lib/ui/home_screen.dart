@@ -13,7 +13,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<Photo> _photos = [];
   final _controller = TextEditingController();
-
   final getPhoto = PixabayApi();
 
   @override
