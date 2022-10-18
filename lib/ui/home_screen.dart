@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:image_search/model/photo_provider.dart';
 import 'package:image_search/ui/widget/photo_widget.dart';
 import '../model/photo.dart';
-import 'data/api.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -13,7 +13,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<Photo> _photos = [];
   final _controller = TextEditingController();
-  final getPhoto = PixabayApi();
 
   @override
   void dispose() {
@@ -23,6 +22,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final photoProvider = PhotoProvider.of(context);
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -47,7 +48,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 suffixIcon: IconButton(
                   onPressed: () async {
-                    final photos = await getPhoto.fetch(_controller.text);
+
+                    final photos = await photoProvider.api.fetch(_controller.text);
                     setState(() {
                       _photos = photos;
                     });
@@ -69,7 +71,10 @@ class _HomeScreenState extends State<HomeScreen> {
               itemBuilder: (context, index) {
                 final photo = _photos[index];
 
-                return PhotoWidget(photo: photo);
+                return PhotoWidget(
+                  photo: photo,
+                  api: photoProvider.api,
+                );
               },
             ),
           ),
