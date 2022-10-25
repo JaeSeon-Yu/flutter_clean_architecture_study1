@@ -1,26 +1,29 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:http/testing.dart';
-import 'package:image_search/data/pixabay_api.dart';
+import 'package:image_search/data/data_source/pixabay_api.dart';
+import 'package:image_search/data/repository/photo_api_repository_impl.dart';
 
 void main() {
   test('pixabay 데이터를 잘 가져와야 한다.', () async {
-    final api = PixabayApi();
 
     final mockClient = MockClient((request) async {
+
       if(request.url.toString() == 'https://pixabay.com/api/?key=30671614-e0e65aecb44d8138643a55e87&q=iphone&image_type=photo'){
         return Response(fakeJsonBody, 200);
       }
+
       return Response('error', 400);
     });
 
+    final api = PhotoApiRepositoryImpl(PixabayApi(mockClient));
 
     final result = await api.fetch('iphone', client: mockClient);
 
+
+
     expect(result.length, 20);
     expect(result.first.id, 2295434);
-
-
   });
 }
 
