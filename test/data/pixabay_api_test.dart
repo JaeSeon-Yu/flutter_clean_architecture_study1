@@ -2,7 +2,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:http/testing.dart';
 import 'package:image_search/data/data_source/pixabay_api.dart';
+import 'package:image_search/data/data_source/result.dart';
 import 'package:image_search/data/repository/photo_api_repository_impl.dart';
+import 'package:image_search/domain/model/photo.dart';
 
 void main() {
   test('pixabay 데이터를 잘 가져와야 한다.', () async {
@@ -18,12 +20,11 @@ void main() {
 
     final api = PhotoApiRepositoryImpl(PixabayApi(mockClient));
 
-    final result = await api.fetch('iphone', client: mockClient);
+    final Result<List<Photo>> result = await api.fetch('iphone');
 
 
+    expect((result as Success<List<Photo>>).data.first.id, 2295434);
 
-    expect(result.length, 20);
-    expect(result.first.id, 2295434);
   });
 }
 
